@@ -1,0 +1,13 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ClassHub Login</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#0a0a0f] text-white min-h-screen flex items-center justify-center p-6">
+<div class="bg-[#111119] p-6 rounded-2xl border border-gray-800 w-full max-w-md">
+<h2 class="font-bold text-xl">🎓 ClassHub</h2><p class="text-xs text-gray-500 mb-4">GCTU Level 100</p>
+{% with messages = get_flashed_messages() %}{% if messages %}<div class="bg-red-900/30 border border-red-800 p-2 rounded mb-3 text-xs">{{ messages[0] }}</div>{% endif %}{% endwith %}
+<form method="POST" action="/login">
+<input name="index" placeholder="10-digit index" class="w-full bg-black border border-gray-700 rounded-xl p-3 mb-2" required>
+<input name="name" placeholder="Full name" class="w-full bg-black border border-gray-700 rounded-xl p-3 mb-2" required>
+<input name="password" type="password" placeholder="Password min 6 chars" class="w-full bg-black border border-gray-700 rounded-xl p-3 mb-2" required>
+<input name="rep_code" placeholder="Rep secret code (reps only, optional)" class="w-full bg-black border border-indigo-900 rounded-xl p-3 mb-3 text-sm">
+<button class="w-full bg-indigo-600 p-3 rounded-xl font-bold">Sign Up / Login</button>
+</form>
+</div></body></html>
