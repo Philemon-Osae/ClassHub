@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rep Center</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#0a0a0f] text-white p-6"><div class="max-w-6xl mx-auto">
+<a href="/" class="text-xs bg-gray-800 px-3 py-1 rounded-full">← Dashboard</a>
+<h1 class="text-2xl font-bold mt-4">Rep Center - {{ user.name }}</h1>
+<div class="grid grid-cols-2 gap-3 mt-4">
+<div class="bg-[#1a1a23] p-4 rounded-2xl border border-gray-800"><p class="text-xs">Uploads</p><p class="text-xl font-bold">{{ materials|length }}</p></div>
+<div class="bg-[#1a1a23] p-4 rounded-2xl border border-gray-800"><p class="text-xs">Questions</p><p class="text-xl font-bold">{{ anon|length }}</p></div>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mt-6">
+<div>
+<form method="POST" action="/rep/upload" enctype="multipart/form-data" class="bg-[#1a1a23] border-2 border-dashed border-indigo-900 p-6 rounded-2xl text-center">
+<input type="file" name="file" class="mb-2 text-xs">
+<div class="grid grid-cols-3 gap-2 mt-3 text-left">
+<select name="course_code" class="bg-black border border-gray-700 rounded p-2 text-xs">{% for c in courses %}<option>{{ c.code }}</option>{% endfor %}</select>
+<select name="week" class="bg-black border border-gray-700 rounded p-2 text-xs"><option>Week 1</option><option>Week 2</option><option>Week 3</option><option>Week 4</option><option>Week 5</option><option>Week 6</option></select>
+<select name="type" class="bg-black border border-gray-700 rounded p-2 text-xs"><option>Slides</option><option>Assignment</option><option>Past Questions</option><option>Resources</option></select>
+</div>
+<input name="link" placeholder="Or Drive link >50MB" class="w-full bg-black border border-gray-700 rounded p-2 text-xs mt-2">
+<button class="w-full bg-indigo-600 p-2 rounded-xl mt-3 font-bold">Upload</button>
+</form>
+<h3 class="font-bold mt-6">Recent</h3>
+{% for m in materials %}<div class="bg-[#1a1a23] p-3 rounded-xl border border-gray-800 flex justify-between mt-2"><div><p class="text-xs font-bold">{{ m.title }}</p><p class="text-[10px] text-gray-500">{{ m.course_code }} - {{ m.week }}</p></div><div class="flex gap-2"><a href="{{ m.file_url }}" target="_blank" class="text-xs bg-gray-800 px-2 py-1 rounded-full">View</a><form method="POST" action="/rep/material/delete"><input type="hidden" name="id" value="{{ m.id }}"><button class="text-xs bg-red-900 px-2 py-1 rounded-full">Delete</button></form></div></div>{% else %}<p class="text-xs text-gray-500">No uploads</p>{% endfor %}
+</div>
+<div>
+{% for q in anon %}<div class="bg-[#1a1a23] p-3 rounded-xl border border-gray-800 mt-2"><p class="text-xs">{{ q.course_code }}: {{ q.message }}</p>{% if q.reply %}<p class="text-xs text-green-400">Replied: {{ q.reply }}</p>{% else %}<form method="POST" action="/rep/reply" class="flex gap-2 mt-2"><input type="hidden" name="id" value="{{ q.id }}"><input name="reply" placeholder="Reply..." class="flex-1 bg-black border border-gray-700 rounded p-1 text-xs" required><button class="bg-blue-600 px-3 py-1 rounded text-xs">Reply</button></form>{% endif %}</div>{% else %}<p class="text-xs text-gray-500">No questions</p>{% endfor %}
+</div>
+</div>
+</div></body></html>
