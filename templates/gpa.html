@@ -1,0 +1,11 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GPA</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#0a0a0f] text-white p-6"><div class="max-w-3xl mx-auto">
+<a href="/" class="text-xs bg-gray-800 px-3 py-1 rounded-full">← Dashboard</a>
+<h1 class="text-2xl font-bold mt-4">GPA Calculator</h1>
+{% with messages = get_flashed_messages() %}{% if messages %}<div class="bg-indigo-900/30 border border-indigo-800 p-3 rounded-xl my-3 text-sm">{{ messages[0] }}</div>{% endif %}{% endwith %}
+<form method="POST" class="bg-[#111119] p-5 rounded-2xl border border-gray-800 mt-4">
+{% for c in courses %}<div class="flex justify-between items-center bg-black p-3 rounded-xl mt-2 border border-gray-800"><div><p class="text-sm font-bold">{{ c.code }}</p><p class="text-[11px] text-gray-500">{{ c.name }} - {{ c.credits }} cr</p></div><select name="{{ c.code }}" class="bg-[#1a1a23] border border-gray-700 rounded-xl p-2 text-sm"><option value="A">A 4.0</option><option value="B+" selected>B+ 3.5</option><option value="B">B 3.0</option><option value="C+">C+ 2.5</option><option value="C">C 2.0</option><option value="D+">D+ 1.5</option><option value="D">D 1.0</option><option value="E">E 0.0</option></select></div>{% endfor %}
+<button class="w-full bg-indigo-600 p-3 rounded-xl font-bold mt-4">Calculate</button>
+</form>
+{% if gpa %}<div class="bg-green-900/20 border border-green-800 p-4 rounded-2xl mt-4 text-center"><p class="text-4xl font-bold">{{ gpa }}</p></div>{% endif %}
+</div></body></html>
