@@ -1,0 +1,5 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Assignments</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#0a0a0f] text-white p-6"><div class="max-w-3xl mx-auto">
+<a href="/" class="text-xs bg-gray-800 px-3 py-1 rounded-full">← Dashboard</a><h1 class="text-2xl font-bold mt-4">Assignments</h1>
+{% for a in assignments %}<div class="bg-[#1a1a23] p-4 rounded-2xl border border-gray-800 mt-3"><p class="font-bold text-sm">{{ a.course_code }} - {{ a.title }}</p><a href="{{ a.file_url }}" target="_blank" class="text-xs bg-indigo-600 px-3 py-1 rounded-full mt-2 inline-block">Open</a></div>{% else %}<p class="text-xs text-gray-500 mt-4">No assignments yet</p>{% endfor %}
+</div></body></html>
