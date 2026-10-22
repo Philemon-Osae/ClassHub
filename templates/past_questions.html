@@ -1,0 +1,5 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Past Questions</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#0a0a0f] text-white p-6"><div class="max-w-3xl mx-auto">
+<a href="/" class="text-xs bg-gray-800 px-3 py-1 rounded-full">← Dashboard</a><h1 class="text-2xl font-bold mt-4">Past Questions</h1>
+{% for m in materials %}<div class="bg-[#1a1a23] p-4 rounded-2xl border border-gray-800 mt-3 flex justify-between"><div><p class="font-bold text-sm">{{ m.title }}</p><p class="text-xs text-gray-500">{{ m.course_code }}</p></div><a href="{{ m.file_url }}" target="_blank" class="text-xs bg-gray-800 px-3 py-1 rounded-full">View</a></div>{% else %}<p class="text-xs text-gray-500 mt-4">No past questions yet</p>{% endfor %}
+</div></body></html>
