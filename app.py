@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 load_dotenv()
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")
+app.secret_key = os.getenv("SECRET_KEY") or "classhub-secret"
 URL = os.getenv("SUPABASE_URL")
 ANON = os.getenv("SUPABASE_ANON_KEY")
 db = create_client(URL, ANON)
@@ -34,8 +34,10 @@ def index():
     timetable=t[0] if t else None
     mats=db.table('materials').select('*').order('created_at', desc=True).limit(20).execute().data
     anon=db.table('anonymous_messages').select('course_code,message,reply,created_at').order('created_at', desc=True).limit(10).execute().data
-    gpa_row=db.table('gpa_records').select('*').eq('user_id', user['id']).order('created_at', desc=True).limit(1).execute().data
-    gpa=gpa_row[0]['gpa'] if gpa_row else None
+    try:
+        gpa_row=db.table('gpa_records').select('*').eq('user_id', user['id']).order('created_at', desc=True).limit(1).execute().data
+        gpa=gpa_row[0]['gpa'] if gpa_row else None
+    except: gpa=None
     return render_template('dashboard.html', user=user, courses=COURSES, timetable=timetable, materials=mats, anon=anon, gpa=gpa)
 
 @app.route('/login', methods=['POST'])
@@ -54,20 +56,20 @@ def login():
         try:
             auth_res=auth_client.auth.sign_up({"email":email,"password":password,"options":{"data":{"index_number":idx,"full_name":name,"rep_code":rep_code}}})
         except Exception as e:
-            flash(f'Failed: {str(e)[:250]}'); return redirect('/')
-    for _ in range(6):
+            # This shows the REAL Supabase error
+            flash(f'Failed: {str(e)[:400]} - Check if index {idx} is in roster and rep_code is valid/empty'); return redirect('/')
+    for _ in range(8):
         try:
             u=db.table('users').select('*').eq('id', auth_res.user.id).single().execute().data
             if u:
                 session['user']=u
                 auth_client.auth.sign_out()
                 return redirect('/')
-        except: time.sleep(0.5)
-    flash('Index not in roster or invalid rep code'); return redirect('/')
+        except: time.sleep(0.6)
+    flash('Index not in roster or invalid rep code. Roster has: 2356866765, 2356866790, 2356866788'); return redirect('/')
 
 @app.route('/logout')
-def logout():
-    session.clear(); return redirect('/')
+def logout(): session.clear(); return redirect('/')
 
 @app.route('/rep/timetable', methods=['GET','POST'])
 def rep_timetable():
@@ -80,8 +82,7 @@ def rep_timetable():
         if action=='upload':
             week_label=request.form.get('week_label','').strip()
             json_text=request.form.get('json_data','').strip()
-            image_url=""
-            file=request.files.get('timetable_image')
+            image_url=""; file=request.files.get('timetable_image')
             if file and file.filename:
                 fn=secure_filename(f"timetable-{int(time.time())}-{file.filename}")
                 db.storage.from_('class-materials').upload(fn, file.read())
@@ -164,4 +165,4 @@ def past_q():
     return render_template('past_questions.html', user=get_user(), materials=mats)
 
 if __name__=='__main__':
-    app.run(debug=False, port=5000)
+    app.run(debug=True, port=5000)
